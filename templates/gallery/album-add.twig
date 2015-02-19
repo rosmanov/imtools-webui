@@ -1,0 +1,9 @@
+{% include 'header.twig' %}
+{% include 'gallery/menu.twig' %}
+{#{{ dump() }}#}
+<form action="{{ page.url }}" method="post">
+    <span class="required-field">*</span> <b>Name:</b>
+    <input type="text" name="name" id="album-name" value="{{ post.name|default('') }}" placeholder="Album name" /><br/>
+    <input type="submit" name="submit" id="submit" value="Add" />
+</form>
+{% include 'footer.twig' %}

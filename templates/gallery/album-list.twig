@@ -1,0 +1,9 @@
+{% if albums|length > 0 %}
+<ul class="gallery-album-list">
+    {% for e in albums %}
+    <li><a href="/gallery/album/?id={{ e.id }}">#{{ e.id }}</a> {{ e.name }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Gallery is empty. You can add some albums here.</p>
+{% endif %}

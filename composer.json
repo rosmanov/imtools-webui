@@ -1,0 +1,38 @@
+{
+    "name": "imtools/webui",
+    "type": "package",
+    "description": "Web interface demonstrating features of the ImTools project",
+    "keywords": [],
+    "homepage": "https://bitbucket.org/osmanov/imtools-webui",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ruslan Osmanov",
+            "email": "rrosmanov@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "idler/MMP",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/idler/MMP.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "twig/twig": "~1.18",
+        "idler/MMP" : "dev-master"
+    },
+    "autoload": {
+        "psr-4": { "ImTools\\WebUI\\": "src/" }
+    },
+    "target-dir": "ImTools/WebUI",
+    "minimum-stability": "dev"
+}

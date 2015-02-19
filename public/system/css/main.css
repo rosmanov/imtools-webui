@@ -1,0 +1,99 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    font-family: 'DejaVu Sans', Arial;
+}
+
+p {
+    font-family: 'DejaVu Serif', serif, 'Times New Roman';
+    font-size: 0.96em;
+}
+
+a {
+    color: #0050A0;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+form {
+    margin: 10px 4px;
+    font-size: 0.9em;
+}
+
+form #submit {
+    font-weight: bold;
+}
+
+.wrapper {
+    min-height: 100%;
+    position: relative;
+    margin: 0 30px;
+}
+
+.header {
+    border-width: 0 0 1px 0;
+    border-color: #333333;
+    border-style: solid;
+    padding: 10px;
+    /*background: #5ee;*/
+}
+
+.content {
+    padding: 10px;
+    padding-bottom: 80px; /* height of the footer */
+}
+
+.footer {
+    height: 80px; /* keep in sync with padding-bottom of .content class */
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    font-size: 0.86em;
+
+    border-width: 1px 0 0 0;
+    border-color: #333333;
+    border-style: solid;
+}
+
+.header .title {
+    font-size: 2em;
+    width: 400px;
+}
+
+.header .title a, .header .title a:hover {
+    color: #000000;
+}
+
+.navigation a:hover, .navigation a {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #0050A0;
+    padding: 0.7em 1.1em;
+}
+
+.navigation a {
+    text-decoration: none;
+}
+
+.navigation a:hover, .navigation .current {
+    background: #f4f4f4;
+}
+
+.gallery-menu {
+    font-size: 0.86em;
+    height: 40px;
+}
+
+.required-field {
+    color: darkred;
+    font-weight: bold;
+}

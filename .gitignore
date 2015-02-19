@@ -1,0 +1,8 @@
+composer
+*~
+conf/local.php
+logs/*.log
+logs/OLD
+tools/mmp/config.ini
+templates_cache
+vendor

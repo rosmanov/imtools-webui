@@ -1,0 +1,5 @@
+<div class="navigation gallery-menu">
+{% for e in gallery_menu %}
+<a {% if e.url == page.url %}href="#" class="current"{% else %}href="{{ e.url }}"{% endif %}>{{ e.name }}</a>
+{% endfor %}
+</div>

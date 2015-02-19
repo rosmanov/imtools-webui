@@ -1,0 +1,5 @@
+<div>
+{% for e in menu %}
+<a {% if page.url == e.url %} class="current" href="#"{% else %}href="{{ e.url }}"{% endif %}>{{ e.name }}</a>
+{% endfor %}
+</div>
