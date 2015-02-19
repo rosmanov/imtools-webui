@@ -33,3 +33,7 @@ return [
     ]
 ];
 ```
+
+## Web server (Nginx) configuration
+
+See <conf/examples/nginx/imtools-webui.conf>
