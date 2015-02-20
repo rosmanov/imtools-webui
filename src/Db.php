@@ -46,6 +46,10 @@ class Db
         return $r;
     }
 
+    public static function free(\mysqli_result $res) {
+        return mysqli_free_result($res);
+    }
+
     public static function fetchAll($query) {
         if (! ($result = static::query($query))) {
             return false;
@@ -67,6 +71,15 @@ class Db
 
         return $return;
     }
+
+	public static function fetch($query) {
+		$result = static::query($query);
+
+		$a = $result->fetch_assoc();
+		static::free($result);
+
+		return $a;
+	}
 
     public static function escape($value) {
         if (!static::$_conn) static::connect();
@@ -90,7 +103,7 @@ class Db
         foreach ($field_values as &$v) {
             $v = "'" . static::escape($v) . "'";
         }
-        $field_names = implode(',', $field_names);
+        $field_values = implode(',', $field_values);
 
         if (static::query('INSERT INTO `' . static::escape($table) . "` ($field_names) VALUES ($field_values)")) {
             return mysqli_insert_id(static::$_conn);

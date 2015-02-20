@@ -11,7 +11,7 @@ $p = Request::getIntFromGet('p');
 $template_vars['albums'] = Gallery::getAlbumList($p, $limit);
 $n_albums = $template_vars['albums'] ? Gallery::countAlbums() : 0;
 $template_vars['num_pages'] = ceil($n_albums / $limit);
-
 $template_vars['page'] = Page::get('gallery');
+$template_vars['gallery_menu'] = Page::get(null, 'gallery-pages');
 
 Template::display('gallery/index.twig', $template_vars);

@@ -10,4 +10,12 @@ if (!($id = Request::getIntFromGet('id', 0, 0))) {
     die('Invalid album ID');
 }
 
+$template_vars['gallery_menu'] = Page::get(null, 'gallery-pages');
+$template_vars['page'] = Page::get('gallery');
 
+
+$template_vars['page']['name'] .= ' / Album';
+if ($template_vars['album'] = Gallery::getAlbum($id)) {
+    $template_vars['album']['images'] = Gallery::getImages($id);
+}
+Template::display('gallery/album-view.twig', $template_vars);
