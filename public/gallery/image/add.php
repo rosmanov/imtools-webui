@@ -15,6 +15,6 @@ if (!empty($_POST)) {
     }
 }
 
-$template_vars['gallery_menu'] = Page::get(null, 'gallery-pages');
-$template_vars['page'] = Page::get('image-add', 'gallery-pages');
+$template_vars['gallery_menu'] = array_merge(Page::get(null, 'gallery-pages'), Page::get(null, 'album-pages'));
+$template_vars['page'] = Page::get('image-add', 'album-pages');
 Template::display('gallery/image-add.twig', $template_vars);

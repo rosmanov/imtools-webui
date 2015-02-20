@@ -10,7 +10,7 @@ if (!($id = Request::getIntFromGet('id', 0, 0))) {
     die('Invalid album ID');
 }
 
-$template_vars['gallery_menu'] = Page::get(null, 'gallery-pages');
+$template_vars['gallery_menu'] = array_merge(Page::get(null, 'gallery-pages'), Page::get(null, 'album-pages'));
 $template_vars['page'] = Page::get('gallery');
 
 
