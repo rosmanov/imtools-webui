@@ -1,3 +1,12 @@
+{% if num_pages > 1 %}
 <div class="pagelist">
-   TODO: Pagelist is not implemented yet.
+    <b>Pages:</b>
+    {% for p in 0..num_pages %}
+    {% if get.p == p %}
+    <b>{{ p + 1}}</b>
+    {% else %}
+    <a href="{{ url_param_replace({'p':p}) }}">{{ p + 1 }}</a>
+    {% endif %}
+    {% endfor %}
 </div>
+{% endif %}

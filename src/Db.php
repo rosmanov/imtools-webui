@@ -101,7 +101,11 @@ class Db
 
         $field_values = array_values($fields);
         foreach ($field_values as &$v) {
-            $v = "'" . static::escape($v) . "'";
+            if ($v === null) {
+                $v = 'NULL';
+            } else {
+                $v = "'" . static::escape($v) . "'";
+            }
         }
         $field_values = implode(',', $field_values);
 

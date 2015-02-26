@@ -1,6 +1,15 @@
 {% include 'header.twig' %}
 {% include 'gallery/menu.twig' %}
 {#{{ dump() }}#}
-ID: {{ album.id }}
-Name: {{ album.name }}
+<h3>Images</h3>
+
+{% for e in album.images %}
+<div class="image-list-element">
+    <b>{{ e.name }}</b><br>
+    <img src="/uploads/{{ e.filename }}" title="{{ e.name }}" alt="{{ e.name }}"><br>
+    Modified: {{ e.modified }}<br>
+    Created: {{ e.created }}
+</div>
+{% endfor %}
+
 {% include 'footer.twig' %}

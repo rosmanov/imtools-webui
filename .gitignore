@@ -6,3 +6,5 @@ logs/OLD
 tools/mmp/config.ini
 templates_cache
 vendor
+uploads
+!*.keep

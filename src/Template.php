@@ -43,6 +43,24 @@ class Template
                 self::$_twig->addExtension(new \Twig_Extension_Debug());
             }
 
+            self::$_twig->addFunction(new \Twig_SimpleFunction('url_param_replace', function($params) {
+                parse_str($_SERVER['QUERY_STRING'], $cur_params);
+
+                $params = array_merge($cur_params, $params);
+                $params = array_filter($params);
+
+                $pos = strpos($_SERVER['REQUEST_URI'], '?');
+                if ($pos)
+                    $url = substr($_SERVER['REQUEST_URI'], 0, $pos);
+                else
+                    $url = $_SERVER['REQUEST_URI'];
+
+                if ($params)
+                    $url .= '?' .http_build_query($params, '', '&');
+
+                return $url;
+            }));
+
             self::$_initialized = true;
         }
     }

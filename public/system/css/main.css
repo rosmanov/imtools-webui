@@ -13,6 +13,30 @@ p {
     font-size: 0.96em;
 }
 
+table th {
+    font-weight: bold;
+    background: #e3e3e3 !important;
+}
+
+table.upload td, table.upload th,
+table.album-list td, table.album-list th,
+table.simple-list td, table.simple-list th
+{
+    padding: 4px 8px;
+}
+table.upload tr:nth-child(even),
+table.album-list tr:nth-child(even),
+table.simple-list tr:nth-child(even)
+{
+    background: #ddd;
+}
+table.upload tr:nth-child(odd),
+table.album-list tr:nth-child(odd),
+table.simple-list tr:nth-child(odd)
+{
+    background: #f4f4f4;
+}
+
 a {
     color: #0050A0;
     text-decoration: none;
@@ -96,4 +120,23 @@ form #submit {
 .required-field {
     color: darkred;
     font-weight: bold;
+}
+
+.errors {
+    color: darkred;
+    font-size: 1.1em;
+    padding: 25px 10px;
+    border-color: darkred;
+    border-width: 1px;
+    border-style: solid;
+    background: rgb(241, 215, 215);
+}
+
+.delete {
+    color: #aa0000;
+}
+
+.pagelist {
+    padding: 40px 0 20px;
+    font-size: 0.96em;
 }

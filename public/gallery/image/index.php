@@ -10,7 +10,8 @@ if (! ($id = Request::getIntFromGet('id', 0, 0))) {
     die('Invalid image ID');
 }
 
-$template_vars['gallery_menu'] = Page::get(null, 'gallery-pages');
+$template_vars['gallery_menu'] = Gallery::getMenu(Gallery::MENU_TYPE_ALBUM);
+
 $template_vars['page'] = Page::get('gallery');
 $template_vars['page']['name'] .= ' / Image';
 $template_vars['image'] = Gallery::getImage($id);

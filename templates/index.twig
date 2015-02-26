@@ -1,6 +1,17 @@
 {% include 'header.twig' %}
 <p>
 <b>ImTools Web UI</b> is a Web interface demonstrating features of the <a target="_blank" href="https://bitbucket.org/osmanov/imtools">ImTools</a> project.
-
 </p>
+
+{% if imtools.version %}
+<h3>Package Info</h3>
+<table class="simple-list">
+{% for key,value in imtools.version %}
+<tr>
+    <td><b>{{ key }}</b></td><td>{{ value }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+
 {% include 'footer.twig' %}

@@ -7,11 +7,13 @@ use ImTools\WebUI\Request;
 require_once __DIR__ . '/../../../src/bootstrap.php';
 
 
-if (!empty($_POST)) {
-    if (!($id = Gallery::addImage($_POST))) {
-        $template_vars['errors'] = 'Failed to add album';
-    } else {
-        Request::redirect('/gallery/image/?id=' . $id);
+if (!empty($_POST['submit'])) {
+    try {
+        if ($image = Gallery::addImage()) {
+            Request::redirect('/gallery/image/?id=' . $image['id']);
+        }
+    } catch (Exception $e) {
+        $template_vars['errors'] = $e->getMessage();
     }
 }
 

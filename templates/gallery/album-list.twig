@@ -1,9 +1,18 @@
 {% if albums|length > 0 %}
-<ul class="gallery-album-list">
+<table class="album-list">
+    <tr>
+        <th>Name</th>
+        <th>Number of images</th>
+        <th>Actions</th>
+    </tr>
     {% for e in albums %}
-    <li><a href="/gallery/album/?id={{ e.id }}">#{{ e.id }}</a> {{ e.name }}</li>
+    <tr>
+        <td><a href="/gallery/album/?id={{ e.id }}">{{ e.name }}</a></td>
+        <td>{{ e.n_images }}</td>
+        <td><a class="delete" href="/gallery/album/delete.php?id={{ e.id }}">Delete</a></td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 {% else %}
 <p>Gallery is empty. You can add some albums here.</p>
 {% endif %}

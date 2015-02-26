@@ -11,7 +11,7 @@ if (!empty($_POST)) {
     if (!($id = Gallery::addAlbum($_POST))) {
         $template_vars['errors'] = 'Failed to add album';
     }
-    Request::redirect('/gallery/');
+    Request::redirect('/gallery/album/?id=' . $id);
 }
 
 $template_vars['gallery_menu'] = Page::get(null, 'gallery-pages');

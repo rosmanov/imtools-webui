@@ -1,10 +1,23 @@
 {% include 'header.twig' %}
 {% include 'gallery/menu.twig' %}
-{#{{ dump() }}#}
-<form action="{{ page.url }}" method="post">
-    <span class="required-field">*</span> <b>Name:</b>
-    <input type="text" name="name" id="image-name" value="{{ post.name|default('') }}" placeholder="Image name" /><br/>
-    <input type="file" name="filename"><br>
-    <input type="submit" name="submit" id="submit" value="Add" />
+
+{% if errors %}<div class="errors">{{ errors }}</div>{% endif %}
+
+<form action="{{ page.url }}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="album_id" id="album_id" value="{{ post.album_id|default(get.album_id|default(0)) }}" />
+    <table class="upload">
+        <tr>
+            <td><span class="required-field">*</span> <b>Name:</b></td>
+            <td><input type="text" name="name" id="image-name" value="{{ post.name|default('') }}" placeholder="Image name" /></td>
+        </tr>
+        <tr>
+            <td><span class="required-field">*</span> <b>File:</b></td>
+            <td><input type="file" name="file"></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: right"><input type="submit" name="submit" id="submit" value="Add" /></td>
+        </tr>
+    </table>
 </form>
+
 {% include 'footer.twig' %}
