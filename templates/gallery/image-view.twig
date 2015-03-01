@@ -1,5 +1,29 @@
 {% include 'header.twig' %}
 {% include 'gallery/menu.twig' %}
 {#{{ dump() }}#}
+<div>
+    <a href="/gallery/album/?id={{ image.album_id }}">&laquo;Back</a>
+</div>
+
+<h3>{{ image.name }}</h3>
+
+<table class="simple-list">
+    <tr>
+        <td colspan=2>
+            <img src="/uploads/{{ image.filename}}" title="{{ image.name}}" alt="{{ image.name }}">
+        </td>
+    </tr>
+    <tr>
+        <td><b>Created:</b></td>
+        <td>{{ image.created }}</td>
+    </tr>
+    <tr>
+        <td><b>Modified:</b></td>
+        <td>{{ image.modified }}</td>
+    </tr>
+    <tr>
+        <td colspan=2><a href="/gallery/image/delete.php?id={{ image.id }}"></td>
+    </tr>
+</div>
 
 {% include 'footer.twig' %}

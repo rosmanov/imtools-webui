@@ -140,3 +140,9 @@ form #submit {
     padding: 40px 0 20px;
     font-size: 0.96em;
 }
+
+.image-list-element {
+    padding: 5px 3px;
+    margin: 10px 0;
+    background: #f4f4f4;
+}

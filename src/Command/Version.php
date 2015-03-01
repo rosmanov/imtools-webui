@@ -1,11 +1,14 @@
 <?php
 namespace ImTools\WebUI\Command;
 
-class Version extends \ImTools\WebUI\Command {
-    protected $executable = 'imresize';
-    protected $options = ['--version' => null];
 
-    public function __construct() {
+class Version extends \ImTools\WebUI\Command {
+
+    public function __construct(array $options) {
+        $this->executable = 'imresize';
+        $this->options = [
+            '--version' => null,
+        ];
     }
 
     public function run() {

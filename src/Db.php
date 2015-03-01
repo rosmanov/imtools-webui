@@ -10,6 +10,7 @@ class Db
 {
     /// Connection object
     protected static $_conn;
+    protected static $_transaction;
 
     public static function connect()
     {
@@ -29,12 +30,14 @@ class Db
         mysqli_query(static::$_conn, "SET NAMES 'utf8'");
     }
 
-    public static function disconnect() {
+    public static function disconnect()
+    {
         mysqli_close(static::$_conn);
         static::$_conn = null;
     }
 
-    public static function query($query, $buffered = true) {
+    public static function query($query, $buffered = true)
+    {
         if (!static::$_conn) static::connect();
 
         if ($buffered) {
@@ -46,18 +49,34 @@ class Db
         return $r;
     }
 
-    public static function free(\mysqli_result $res) {
+    public static function free(\mysqli_result $res)
+    {
         return mysqli_free_result($res);
     }
 
-    public static function fetchAll($query) {
+    public static function fetchCol($query, $i = 0)
+    {
+        $result = static::query($query);
+        if (!$result) return false;
+        $r = [];
+
+        while ($a = mysqli_fetch_row($result)) $r[] = $a[$i];
+
+        static::free($result);
+
+        return $r;
+    }
+
+    public static function fetchAll($query)
+    {
         if (! ($result = static::query($query))) {
             return false;
         }
         return $result->fetch_all(\MYSQLI_ASSOC);
     }
 
-    public static function f1($query) {
+    public static function f1($query)
+    {
         if (!static::$_conn) static::connect();
 
         $result = static::query($query);
@@ -72,16 +91,18 @@ class Db
         return $return;
     }
 
-	public static function fetch($query) {
-		$result = static::query($query);
+    public static function fetch($query)
+    {
+        $result = static::query($query);
 
-		$a = $result->fetch_assoc();
-		static::free($result);
+        $a = $result->fetch_assoc();
+        static::free($result);
 
-		return $a;
-	}
+        return $a;
+    }
 
-    public static function escape($value) {
+    public static function escape($value)
+    {
         if (!static::$_conn) static::connect();
 
         if (!is_numeric($value)) {
@@ -109,8 +130,30 @@ class Db
         }
         $field_values = implode(',', $field_values);
 
-        if (static::query('INSERT INTO `' . static::escape($table) . "` ($field_names) VALUES ($field_values)")) {
+        if (static::query($q = 'INSERT INTO `' . static::escape($table) . "` ($field_names) VALUES ($field_values)")) {
             return mysqli_insert_id(static::$_conn);
+        } else {
+            trigger_error('Query failed: ' . $q, E_USER_WARNING);
         }
+    }
+    public static function begin()
+    {
+        if (static::$_transaction) {
+            throw new LogicException("transaction already started");
+        }
+        static::$_transaction = true;
+        return static::query("BEGIN");
+    }
+
+    public static function commit()
+    {
+        static::$_transaction = false;
+        return static::query("COMMIT");
+    }
+
+    public static function rollback()
+    {
+        static::$_transaction = false;
+        return static::query("ROLLBACK");
     }
 }

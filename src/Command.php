@@ -1,21 +1,36 @@
 <?php
 namespace ImTools\WebUI;
 
+
 use \ImTools\WebUI\Exception\CommandFailedException;
+
 
 abstract class Command {
     protected
         $executable,
         $options;
 
-    abstract public function __construct();
+    abstract public function __construct(array $options);
+
     abstract public function run();
 
-    protected function exec() {
+    protected function getOptionKey($k)
+    {
+        return '--' . $k;
+    }
+
+    public function getOption($k)
+    {
+        $key = $this->getOptionKey($k);
+        return isset($this->options[$key]) ? $this->options[$key] : null;
+    }
+
+    protected function exec()
+    {
         $command = $this->executable;
         if ($this->options) {
             foreach ($this->options as $k => $v) {
-                $a []= $k . $v;
+                $a []= $k . '=' . escapeshellarg($v);
             }
             $command .= ' ' . implode(' ', $a);
             $a = null;

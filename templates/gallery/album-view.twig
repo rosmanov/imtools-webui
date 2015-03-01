@@ -4,12 +4,39 @@
 <h3>Images</h3>
 
 {% for e in album.images %}
-<div class="image-list-element">
-    <b>{{ e.name }}</b><br>
-    <img src="/uploads/{{ e.filename }}" title="{{ e.name }}" alt="{{ e.name }}"><br>
-    Modified: {{ e.modified }}<br>
-    Created: {{ e.created }}
-</div>
+<table class="image-list-element">
+    <tr>
+        <td>
+            <a href="/gallery/image/?id={{ e.id }}" target="_blank">
+                <img src="/uploads/{{ e.thumbnail }}" title="{{ e.name }}" alt="{{ e.name }}"><br>
+            </a>
+        </td>
+        <td>
+            <table class="simple-list">
+                <tr>
+                    <td colspan=2><b>{{ e.name }}</b></td>
+                </tr>
+                <tr>
+                    <td>Modified:</td>
+                    <td>{{ e.modified }}</td>
+                </tr>
+                <tr>
+                    <td>Created:</td>
+                    <td>{{ e.created }}</td>
+                </tr>
+                <tr>
+                    <td colspan=2>
+                        <a href="/gallery/image/?id={{ e.id }}" target="_blank">View</a>
+                        |
+                        <a href="/gallery/image/delete.php?id={{ e.id }}" class="delete">Delete</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+{% else %}
+<p>Album is empty</p>
 {% endfor %}
 
 {% include 'footer.twig' %}

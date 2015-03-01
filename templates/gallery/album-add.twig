@@ -2,8 +2,28 @@
 {% include 'gallery/menu.twig' %}
 {#{{ dump() }}#}
 <form action="{{ page.url }}" method="post">
-    <span class="required-field">*</span> <b>Name:</b>
-    <input type="text" name="name" id="album-name" value="{{ post.name|default('') }}" placeholder="Album name" /><br/>
-    <input type="submit" name="submit" id="submit" value="Add" />
+    <table class="upload">
+        <tr>
+            <td><span class="required-field">*</span> <b>Name:</b></td>
+            <td><input type="text" name="name" id="album-name" value="{{ post.name|default('') }}" placeholder="Album name" /></td>
+        </tr>
+        <tr>
+            <td><b>Format ID:</b></td>
+            <td>
+                <select name="format_id">
+                    {% for k,v in formats %}
+                    <option name="{{ k }}"{% if post.format_id == v %} selected{% endif %}>{{ v.width }}x{{ v.height }}</option>
+                    {% endfor %}
+                </select>
+                px
+            </td>
+        </tr>
+        <tr>
+            <td colspan=2>
+                <input type="submit" name="submit" id="submit" value="Add" />
+            </td>
+        </tr>
+    </table>
+
 </form>
 {% include 'footer.twig' %}
