@@ -35,16 +35,30 @@ class Gallery
         }
 
         return Db::insert(self::ALBUMS_TABLE, [
-            'name' => $name,
+            'name'    => $name,
+            'created' => null,
         ]);
+    }
+
+    private static function _makeUniqueFilename($filename)
+    {
+        $pathinfo = pathinfo($filename);
+
+        for ($i = 0; file_exists($filename); ++$i) {
+            if ($i > 100) {
+                $i = uniqid('dup');
+            }
+            $filename = $pathinfo['dirname'] . '/'
+                . $pathinfo['filename'] . '_' . $i . '.' . $pathinfo['extension'];
+        }
+
+        return $filename;
     }
 
     public static function addImage()
     {
-        Request::requirePostString('name', 'Image name cannot be empty');
-
         if (! ($album_id = Request::getIntFromPost('album_id', 0))) {
-            throw new \RuntimeException('Invalid album ID passed');
+            throw new \BadMethodCallException('Invalid album ID passed');
         }
 
         $target_dir = Conf::get('fs', 'upload_dir');
@@ -53,17 +67,18 @@ class Gallery
 
         $image_size = getimagesize($_FILES["file"]["tmp_name"]);
         if ($image_size === false) {
-            throw new \RuntimeException('File is not an image');
+            throw new \BadMethodCallException('File is not an image');
         }
 
+        $target_file = self::_makeUniqueFilename($target_file);
         if (file_exists($target_file)) {
-            throw new \RuntimeException("Sorry, file already exists.");
+            throw new \RuntimeException('Sorry, file already exists. Failed to pick unique filename.');
         }
 
         if ($image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg"
             && $image_file_type != "gif" )
         {
-            throw new \RuntimeException("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
+            throw new \BadMethodCallException('Sorry, only JPG, JPEG, PNG & GIF files are allowed.');
         }
 
         if (! move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
@@ -73,7 +88,6 @@ class Gallery
         $filename = basename($target_file);
         $image = [
             'album_id'      => $album_id,
-            'name'          => $_POST['name'],
             'filename'      => $filename,
             'filename_hash' => sha1($filename),
             'width'         => $image_size[0],

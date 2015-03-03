@@ -1,24 +1,46 @@
 {% include 'header.twig' %}
+
+<link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700" rel='stylesheet' />
+<link href="/system/css/upload.css" rel="stylesheet" />
+
 {% include 'gallery/menu.twig' %}
 
 {% if errors %}<div class="errors">{{ errors }}</div>{% endif %}
 
-<form action="{{ page.url }}{% if server.QUERY_STRING %}?{{ server.QUERY_STRING }}{% endif %}"
-    method="post" enctype="multipart/form-data">
+
+<form id="upload"
+      action="{{ page.url }}{% if server.QUERY_STRING %}?{{ server.QUERY_STRING }}{% endif %}"
+      method="post" enctype="multipart/form-data">
     <input type="hidden" name="album_id" id="album_id" value="{{ post.album_id|default(get.album_id|default(0)) }}" />
-    <table class="upload">
-        <tr>
-            <td><span class="required-field">*</span> <b>Name:</b></td>
-            <td><input type="text" name="name" id="image-name" value="{{ post.name|default('') }}" placeholder="Image name" /></td>
-        </tr>
-        <tr>
-            <td><span class="required-field">*</span> <b>File:</b></td>
-            <td><input type="file" name="file"></td>
-        </tr>
-        <tr>
-            <td colspan="2" style="text-align: right"><input type="submit" name="submit" id="submit" value="Add" /></td>
-        </tr>
-    </table>
+    <div id="drop">
+        Drop Here
+
+        <a>Browse</a>
+        <input type="file" name="file" multiple />
+    </div>
+
+    <ul>
+        <!-- The file uploads will be shown here -->
+    </ul>
+
+    {#
+     #<table class="upload">
+     #    <tr>
+     #        <td><span class="required-field">*</span> <b>File:</b></td>
+     #        <td><input type="file" name="file"></td>
+     #    </tr>
+     #    <tr>
+     #        <td colspan="2" style="text-align: right"><input type="submit" name="submit" id="submit" value="Add" /></td>
+     #    </tr>
+     #</table>
+     #}
 </form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="/system/js/jquery.knob.js"></script>
+<script src="/system/js/jquery.ui.widget.js"></script>
+<script src="/system/js/jquery.iframe-transport.js"></script>
+<script src="/system/js/jquery.fileupload.js"></script>
+<script src="/system/js/upload.js"></script>
 
 {% include 'footer.twig' %}

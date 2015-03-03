@@ -30,7 +30,11 @@ abstract class Command {
         $command = $this->executable;
         if ($this->options) {
             foreach ($this->options as $k => $v) {
-                $a []= $k . '=' . escapeshellarg($v);
+                if ($v !== null) {
+                    $a []= $k . '=' . escapeshellarg($v);
+                } else {
+                    $a []= $k;
+                }
             }
             $command .= ' ' . implode(' ', $a);
             $a = null;

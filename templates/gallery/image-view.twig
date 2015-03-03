@@ -5,12 +5,12 @@
     <a href="/gallery/album/?id={{ image.album_id }}">&laquo;Back</a>
 </div>
 
-<h3>{{ image.name }}</h3>
+<h3>{{ image.filename }}</h3>
 
 <table class="simple-list">
     <tr>
         <td colspan=2>
-            <img src="/uploads/{{ image.filename}}" title="{{ image.name}}" alt="{{ image.name }}">
+            <img src="/uploads/{{ image.filename}}" title="{{ image.filename }}" alt="{{ image.filename }}">
         </td>
     </tr>
     <tr>
