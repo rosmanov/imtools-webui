@@ -1,6 +1,7 @@
 <?php
 namespace ImTools\WebUI;
 
+
 class Gallery
 {
     const
@@ -31,12 +32,21 @@ class Gallery
     public static function addAlbum(array $data)
     {
         if (! ($name = trim($data['name']))) {
-            throw new RuntimeException('Album name cannot be empty');
+            throw new \RuntimeException('Album name cannot be empty');
         }
 
+        if (! isset($data['format_id'])
+            || ! in_array($data['format_id'], array_keys(Conf::get('thumbs'))))
+        {
+            throw new \RuntimeException('Invalid format id: '
+                . var_export($data['format_id'], true));
+        }
+        $format_id = (int) $data['format_id'];
+
         return Db::insert(self::ALBUMS_TABLE, [
-            'name'    => $name,
-            'created' => null,
+            'name'      => $name,
+            'format_id' => $format_id,
+            'created'   => null,
         ]);
     }
 

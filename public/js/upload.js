@@ -60,7 +60,7 @@ $(function(){
 
         fail:function(e, data){
             // Something has gone wrong!
-            console.log(e, data);
+            //console.log(e, data);
             data.context.addClass('error');
         }
 

@@ -12,7 +12,7 @@
             <td>
                 <select name="format_id">
                     {% for k,v in formats %}
-                    <option name="{{ k }}"{% if post.format_id == v %} selected{% endif %}>{{ v.width }}x{{ v.height }}</option>
+                    <option value="{{ k }}"{% if post.format_id == v %} selected{% endif %}>{{ v.width }}x{{ v.height }}</option>
                     {% endfor %}
                 </select>
                 px
