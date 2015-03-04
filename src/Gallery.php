@@ -72,8 +72,8 @@ class Gallery
         }
 
         $target_dir = Conf::get('fs', 'upload_dir');
-        $target_file = $target_dir . '/' . basename($_FILES["file"]["name"]);
-        $image_file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+        $target_file = $target_dir . '/' . mb_strtolower(basename($_FILES["file"]["name"]), 'UTF-8');
+        $extension = pathinfo($target_file, PATHINFO_EXTENSION);
 
         $image_size = getimagesize($_FILES["file"]["tmp_name"]);
         if ($image_size === false) {
@@ -85,10 +85,10 @@ class Gallery
             throw new \RuntimeException('Sorry, file already exists. Failed to pick unique filename.');
         }
 
-        if ($image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg"
-            && $image_file_type != "gif" )
-        {
-            throw new \BadMethodCallException('Sorry, only JPG, JPEG, PNG & GIF files are allowed.');
+        $allowed_extensions = ['jpg', 'png', 'jpeg', 'gif', 'bmp'];
+        if (! in_array($extension, $allowed_extensions)) {
+            throw new \BadMethodCallException('Sorry, only ' . implode(', ', $allowed_extensions)
+                . ' files are allowed.');
         }
 
         if (! move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
