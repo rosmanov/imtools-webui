@@ -171,8 +171,9 @@ class Gallery
 
         foreach (Conf::get('thumbs') as $format_id => $format) {
             $options = [
-                'source' => $image_path,
-                'output' => static::getThumbnailPath($image_id, $format_id),
+                'source'        => $image_path,
+                'output'        => static::getThumbnailPath($image_id, $format_id),
+                'interpolation' => 'area',
             ];
 
             $fx = $format['width'] / $image['width'];

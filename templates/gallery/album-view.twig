@@ -13,7 +13,15 @@
         <td>
             <table class="simple-list">
                 <tr>
-                    <td colspan=2><b>{{ e.filename }}</b></td>
+                    <td>File:</td>
+                    <td>
+                        <a href="/gallery/image/?id={{ e.id }}" target="_blank">
+                            <code>{{ e.filename }}</code>
+                        </a>
+                        <a href="javascript:void(0)"
+                           onclick="if (confirm('This will remove the image. Are you sure?')) return imToolsWebUi.deleteObject('/gallery/image/delete.php?id={{ e.id }}', $(this).closest('.image-list-element'))"
+                           class="action delete">x</a>
+                    </td>
                 </tr>
                 <tr>
                     <td>Modified:</td>
@@ -22,15 +30,6 @@
                 <tr>
                     <td>Created:</td>
                     <td>{{ e.created }}</td>
-                </tr>
-                <tr>
-                    <td colspan=2>
-                        <a href="/gallery/image/?id={{ e.id }}" target="_blank">View</a>
-                        |
-                        <a href="javascript:void(0)"
-                           onclick="if (confirm('This will remove the image. Are you sure?')) return imToolsWebUi.deleteObject('/gallery/image/delete.php?id={{ e.id }}', $(this).closest('.image-list-element'))"
-                           class="action delete">Delete</span>
-                    </td>
                 </tr>
             </table>
         </td>
