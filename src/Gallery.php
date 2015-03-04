@@ -123,6 +123,9 @@ class Gallery
     public static function deleteImage($image_id)
     {
         $image_id = (int) $image_id;
+        if ($image_id <= 0) {
+            throw new \RuntimeException("Invalid image ID");
+        }
 
         $cwd = getcwd();
         chdir(Conf::get('fs', 'upload_dir'));
@@ -139,8 +142,8 @@ class Gallery
 
         chdir($cwd);
 
-        Db::query("DELETE FROM " . static::IMAGES_TABLE . " WHERE id = $image_id");
-        Db::query("DELETE FROM " . static::THUMBS_TABLE . " WHERE image_id = $image_id");
+        Db::query($q = "DELETE FROM " . static::IMAGES_TABLE . " WHERE id = $image_id");
+        Db::query($q = "DELETE FROM " . static::THUMBS_TABLE . " WHERE image_id = $image_id");
     }
 
     protected static function makeThumbnails($image_id)

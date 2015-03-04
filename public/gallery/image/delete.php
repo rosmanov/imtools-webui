@@ -1,6 +1,7 @@
 <?php
 use ImTools\WebUI\Gallery;
 use ImTools\WebUI\Request;
+use ImTools\WebUI\Response;
 
 require_once __DIR__ . '/../../../src/bootstrap.php';
 
@@ -13,7 +14,8 @@ try {
         throw new RuntimeException("Image not found");
     }
     Gallery::deleteImage($id);
-    Request::redirect('/gallery/album/?id=' . $image['album_id']);
+    //Request::redirect('/gallery/album/?id=' . $image['album_id']);
+    Response::jsonSuccess();
 } catch (Exception $e) {
     die($e->getMessage());
 }

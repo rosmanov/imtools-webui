@@ -9,10 +9,6 @@
 }
 
 
-/*-------------------------
-    General Styles
---------------------------*/
-
 
 html{
     background-color:#ebebec;
@@ -21,7 +17,7 @@ html{
     background-image:-moz-radial-gradient(center, #ebebec, #b4b4b4);
     background-image:radial-gradient(center, #ebebec, #b4b4b4);
 
-    min-height:900px;
+    min-height:300px;
 }
 
 body{
@@ -43,25 +39,18 @@ section, footer, header, aside{
 }
 
 
-/*----------------------------
-    The file upload form
------------------------------*/
 
 
 #upload{
-    font-family:'PT Sans Narrow', sans-serif;
     background-color:#373a3d;
 
     background-image:-webkit-linear-gradient(top, #373a3d, #313437);
     background-image:-moz-linear-gradient(top, #373a3d, #313437);
     background-image:linear-gradient(top, #373a3d, #313437);
 
-    width:250px;
-    padding:30px;
-    border-radius:3px;
-
-    margin:200px auto 100px;
+    margin: 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    height: 100%;
 }
 
 #drop{
@@ -70,7 +59,7 @@ section, footer, header, aside{
     margin-bottom: 30px;
     border: 20px solid rgba(0, 0, 0, 0);
     border-radius: 3px;
-    border-image: url('/system/images/border-image.png') 25 repeat;
+    border-image: url('/images/border-image.png') 25 repeat;
     text-align: center;
     text-transform: uppercase;
 
@@ -101,7 +90,7 @@ section, footer, header, aside{
 
 #upload ul{
     list-style:none;
-    margin:0 -30px;
+    /*margin:0 -30px;*/
     border-top:1px solid #2b2e31;
     border-bottom:1px solid #3d4043;
 }
@@ -127,7 +116,7 @@ section, footer, header, aside{
 }
 
 #upload ul li p{
-    width: 144px;
+    width: 80%;
     overflow: hidden;
     white-space: nowrap;
     color: #EEE;
@@ -154,7 +143,7 @@ section, footer, header, aside{
 #upload ul li span{
     width: 15px;
     height: 12px;
-    background: url('/system/images/icons.png') no-repeat;
+    background: url('/images/icons.png') no-repeat;
     position: absolute;
     top: 34px;
     right: 33px;
@@ -171,9 +160,6 @@ section, footer, header, aside{
 }
 
 
-/*----------------------------
-    The Demo Footer
------------------------------*/
 
 
 footer{
@@ -258,3 +244,4 @@ footer h2 i{
     float: left;
     margin-top: 11px;
 }
+
