@@ -243,7 +243,7 @@ class Gallery
             JOIN " . static::ALBUMS_TABLE . " a ON a.id = i.album_id
             JOIN " . static::THUMBS_TABLE . " t ON t.image_id = i.id
             WHERE i.album_id = $album_id AND t.format_id = a.format_id
-            ORDER BY i.created");
+            ORDER BY i.created, i.id");
     }
 
     public static function getImageIds($album_id)
