@@ -2,11 +2,6 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-
-    /*background-color:#ebebec;*/
-    /*background-image:-webkit-radial-gradient(center, #ebebec, #b4b4b4);*/
-    /*background-image:-moz-radial-gradient(center, #ebebec, #b4b4b4);*/
-    /*background-image:radial-gradient(center, #ebebec, #b4b4b4);*/
 }
 
 body {
@@ -21,7 +16,8 @@ p {
 
 table th {
     font-weight: bold;
-    background: #e3e3e3 !important;
+    background: #555555 !important;
+    color: #f0f0f0;
 }
 
 table.upload td, table.upload th,
@@ -150,6 +146,23 @@ form #submit {
 .image-list-element {
     padding: 5px 3px;
     margin: 10px 0;
-    background: #f4f4f4;
     font-size: 0.8em;
+    width:600px;
+}
+.thumbnail-container {
+    padding: 3px;
+    /*background-color: #4b4b4b;*/
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+
+}
+
+.thumbnail-container,
+table.album-list,
+table.upload,
+table.simple-list
+{
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(128,128,128,1);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(128,128,128,1);
+    box-shadow: 10px 10px 5px 0px rgba(128,128,128,1);
 }

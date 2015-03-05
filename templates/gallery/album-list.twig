@@ -13,7 +13,11 @@
         <td>{{ e.n_images }}</td>
         <td>{{ thumbnail_formats[e.format_id].width }}x{{ thumbnail_formats[e.format_id].height }}px</td>
         <td>{{ e.interpolation }}</td>
-        <td><a class="delete" href="/gallery/album/delete.php?id={{ e.id }}">Delete</a></td>
+        <td>
+            <a href="javascript:void(0)"
+               onclick="if (confirm('This will remove the album with its images. Are you sure?')) return imToolsWebUi.deleteObject('/gallery/album/delete.php?id={{ e.id }}', $(this).closest('tr'))"
+               class="delete">Delete</a>
+        </td>
     </tr>
     {% endfor %}
 </table>

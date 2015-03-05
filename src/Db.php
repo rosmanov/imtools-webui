@@ -46,6 +46,11 @@ class Db
             /// \note: in unbuffered mode we can't use mysqli_num_rows(), mysqli_data_seek() etc.
             $r = mysqli_query(static::$_conn, $query, \MYSQLI_USE_RESULT);
         }
+
+        if (!$r) {
+            trigger_error("Query failed, SQL: $query, Error: " . static::$_conn->error, E_USER_WARNING);
+        }
+
         return $r;
     }
 

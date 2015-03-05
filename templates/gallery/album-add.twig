@@ -1,14 +1,14 @@
 {% include 'header.twig' %}
 {% include 'gallery/menu.twig' %}
-{#{{ dump() }}#}
+
 <form action="{{ page.url }}" method="post">
     <table class="upload">
         <tr>
-            <td><span class="required-field">*</span> <b>Name:</b></td>
+            <td><span class="required-field">*</span> <b>Name</b></td>
             <td><input type="text" name="name" id="album-name" value="{{ post.name|default('') }}" placeholder="Album name" /></td>
         </tr>
         <tr>
-            <td><b>Format ID:</b></td>
+            <td><b>Format ID</b></td>
             <td>
                 <select name="format_id">
                     {% for k,v in formats %}
@@ -19,7 +19,7 @@
             </td>
         </tr>
         <tr>
-            <td><b>Interpolation:</b></td>
+            <td><b>Interpolation</b></td>
             <td>
                 <select name="interpolation" id="interpolation">
                     {% for k,v in interpolation %}
@@ -36,4 +36,5 @@
     </table>
 
 </form>
+
 {% include 'footer.twig' %}
