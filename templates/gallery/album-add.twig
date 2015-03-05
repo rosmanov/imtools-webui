@@ -19,6 +19,16 @@
             </td>
         </tr>
         <tr>
+            <td><b>Interpolation:</b></td>
+            <td>
+                <select name="interpolation" id="interpolation">
+                    {% for k,v in interpolation %}
+                    <option value="{{ k }}"{% if post.interpolation == v %} selected{% endif %}>{{ v }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td colspan=2>
                 <input type="submit" name="submit" id="submit" value="Add" />
             </td>

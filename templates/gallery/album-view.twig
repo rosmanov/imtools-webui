@@ -1,7 +1,31 @@
 {% include 'header.twig' %}
 {% include 'gallery/menu.twig' %}
-{#{{ dump() }}#}
 
+<h3>Album Info</h3>
+<table class="simple-list">
+    <tr>
+        <td><b>Name:</b></td>
+        <td>{{ album.name }}</td>
+    </tr>
+    <tr>
+        <td><b>Format:</b></td>
+        <td>{{ thumbnail_formats[album.format_id].width }}x{{ thumbnail_formats[album.format_id].height }}px</td>
+    </tr>
+    <tr>
+        <td><b>Interpolation:</b></td>
+        <td>{{ album.interpolation }}</td>
+    </tr>
+    <tr>
+        <td><b>Created:</b></td>
+        <td>{{ album.created }}</td>
+    </tr>
+    <tr>
+        <td><b>Modified:</b></td>
+        <td>{{ album.modified }}</td>
+    </tr>
+</table>
+
+<h3>Images</h3>
 {% for e in album.images %}
 <table class="image-list-element">
     <tr>

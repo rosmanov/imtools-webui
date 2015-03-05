@@ -3,12 +3,16 @@
     <tr>
         <th>Name</th>
         <th>Number of images</th>
+        <th>Format</th>
+        <th>Interpolation</th>
         <th>Actions</th>
     </tr>
     {% for e in albums %}
     <tr>
         <td><a href="/gallery/album/?id={{ e.id }}">{{ e.name }}</a></td>
         <td>{{ e.n_images }}</td>
+        <td>{{ thumbnail_formats[e.format_id].width }}x{{ thumbnail_formats[e.format_id].height }}px</td>
+        <td>{{ e.interpolation }}</td>
         <td><a class="delete" href="/gallery/album/delete.php?id={{ e.id }}">Delete</a></td>
     </tr>
     {% endfor %}

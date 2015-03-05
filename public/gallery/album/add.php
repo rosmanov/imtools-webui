@@ -18,4 +18,5 @@ if (!empty($_POST)) {
 $template_vars['gallery_menu'] = Page::get(null, 'gallery-pages');
 $template_vars['page'] = Page::get('album-add', 'gallery-pages');
 $template_vars['formats'] = Conf::get('thumbs');
+$template_vars['interpolation'] = Conf::get('interpolation');
 Template::display('gallery/album-add.twig', $template_vars);

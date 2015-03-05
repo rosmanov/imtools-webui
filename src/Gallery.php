@@ -17,7 +17,8 @@ class Gallery
         $start = (int) $start;
         $limit = (int) $limit;
 
-        $list = Db::fetchAll("SELECT id, name FROM " . static::ALBUMS_TABLE. " LIMIT $start, $limit");
+        $list = Db::fetchAll("SELECT id, name, interpolation, format_id FROM "
+            . static::ALBUMS_TABLE. " LIMIT $start, $limit");
         foreach ($list as &$l) {
             $l['n_images'] = self::countImages($l['id']);
         }
@@ -161,6 +162,9 @@ class Gallery
         if (! ($image = static::getImage($image_id))) {
             throw new \RuntimeException("Image #$image_id not found");
         }
+        if (! ($album = static::getAlbum($image['album_id']))) {
+            throw new \RuntimeException("Failed to fetch album for image #$image_id");
+        }
 
         $upload_dir = Conf::get('fs', 'upload_dir');
         $image_path = $upload_dir . '/' . $image['filename'];
@@ -173,7 +177,7 @@ class Gallery
             $options = [
                 'source'        => $image_path,
                 'output'        => static::getThumbnailPath($image_id, $format_id),
-                'interpolation' => 'area',
+                'interpolation' => $album['interpolation'],
             ];
 
             $fx = $format['width'] / $image['width'];

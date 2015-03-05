@@ -7,4 +7,8 @@ return [
         'width'  => 90,
         'height' => 90,
     ],
+    2 => [
+        'width'  => 300,
+        'height' => 300,
+    ],
 ];
