@@ -95,8 +95,9 @@ form #submit {
     width: 400px;
 }
 
-.header .title a, .header .title a:hover {
+.header .title a, .header .title a:hover, .header .title a:visited {
     color: #000000;
+    text-decoration:none;
 }
 
 .navigation a:hover, .navigation a {
@@ -111,7 +112,8 @@ form #submit {
 }
 
 .navigation a:hover, .navigation .current {
-    background: #f4f4f4;
+    background: #3755A0;
+    color: #f4f4f4;
 }
 
 .gallery-menu {

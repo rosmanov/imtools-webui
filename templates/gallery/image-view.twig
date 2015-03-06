@@ -10,7 +10,7 @@
 <table class="simple-list">
     <tr>
         <td colspan=2>
-            <img src="/uploads/{{ image.filename}}" title="{{ image.filename }}" alt="{{ image.filename }}">
+            <img src="/uploads/{{ image.filename}}" title="{{ image.filename }}" alt="{{ image.filename }}" style="width:100%">
         </td>
     </tr>
     <tr>
@@ -24,6 +24,7 @@
     <tr>
         <td colspan=2><a href="/gallery/image/delete.php?id={{ image.id }}"></td>
     </tr>
-</div>
+</table>
+<br />
 
 {% include 'footer.twig' %}
