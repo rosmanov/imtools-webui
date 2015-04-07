@@ -62,8 +62,10 @@ $(function(){
             // Something has gone wrong!
             //console.log(e, data);
             data.context.addClass('error');
-        }
+        },
 
+        done: function(e, data) {
+        }
     });
 
 

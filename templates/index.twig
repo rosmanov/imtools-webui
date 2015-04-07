@@ -3,8 +3,9 @@
 <b>ImTools Web UI</b> is a Web interface demonstrating features of the <a target="_blank" href="https://bitbucket.org/osmanov/imtools">ImTools</a> project.
 </p>
 
+
 {% if imtools.version %}
-<h3>Package Info</h3>
+<h3>Package Info (via exec)</h3>
 <table class="simple-list">
 {% for key,value in imtools.version %}
 <tr>
@@ -12,6 +13,25 @@
 </tr>
 {% endfor %}
 </table>
+{% endif %}
+
+{% if wscmd.meta.all %}
+<h3>Package Info (via WebSocket)</h3>
+<div id="wsmeta-buttons">
+    <button onclick='wc.sendMessage({{ wscmd.meta.all|raw}})'>Meta/All</button>
+    <button onclick='wc.sendMessage({{ wscmd.meta.version|raw}})'>Meta/Version</button>
+    <button onclick='wc.sendMessage({{ wscmd.meta.features|raw}})'>Meta/Features</button>
+</div>
+<script>
+$(document).ready(function() {
+    var timer = setInterval(function () {
+        if (!wc.connected) return;
+        wc.sendMessage({{ wscmd.meta.all|raw }});
+        clearInterval(timer);
+    }, 500);
+});
+</script>
+
 {% endif %}
 
 {% include 'footer.twig' %}

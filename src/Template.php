@@ -1,6 +1,8 @@
 <?php
 namespace ImTools\WebUI;
 
+use \ImTools\WebUI\WSCommand;
+
 class Template
 {
     protected static
@@ -28,6 +30,11 @@ class Template
             }
             if ($_GET) {
                 self::$_global_vars['get'] = $_GET;
+            }
+
+            $wsclient_config = Conf::get('wsclient');
+            foreach (['application', 'port', 'host'] as $c) {
+                self::$_global_vars['ws']['_config'][$c] = isset($wsclient_config[$c]) ? $wsclient_config[$c] : null;
             }
 
             \Twig_Autoloader::register();

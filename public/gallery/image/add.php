@@ -10,19 +10,15 @@ require_once __DIR__ . '/../../../src/bootstrap.php';
 
 if (!empty($_POST)) {
     try {
-        if ($image = Gallery::addImage()) {
-            echo '{"status":"success"}';
-            //Request::redirect('/gallery/image/?id=' . $image['id']);
+        if ($image = Gallery::addImage(isset($_POST['make_thumbnails']))) {
+            Response::jsonSuccess();
         } else {
-            //echo '{"status":"error"}';
-            Response::internalServerError("Failed to add image to gallery");
+            Response::jsonError("Failed to add image to gallery");
         }
     } catch (BadMethodCallException $e) {
         Response::badRequest($e->getMessage());
     } catch (Exception $e) {
-        //$template_vars['errors'] = $e->getMessage();
-        //echo '{"status":"error"}';
-        Response::internalServerError($e->getMessage());
+        Response::jsonError($e->getMessage());
     }
     exit;
 }

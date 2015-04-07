@@ -8,3 +8,4 @@ templates_cache
 vendor
 uploads
 !*.keep
+tags

@@ -27,7 +27,8 @@ abstract class Command {
 
     protected function exec()
     {
-        $command = $this->executable;
+        $bin_dir = Conf::get('fs', 'imtools_bin_dir');
+        $command = ($bin_dir ? $bin_dir . '/' : '') . $this->executable;
         if ($this->options) {
             foreach ($this->options as $k => $v) {
                 if ($v !== null) {

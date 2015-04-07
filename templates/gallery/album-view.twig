@@ -30,20 +30,59 @@
 </table>
 
 <h3>Images</h3>
+<script>
+function makeThumbnail(node, wsCmd, imageId, formatId) {
+    wc.sendMessage(wsCmd, function(evt) {
+        wc._defaultOnMessage.call(wc, evt);
+
+        var data = JSON.parse(evt.data);
+        if (!data) return false;
+        if (data.error != false) {
+            $(node).parent().append("<br><span style='color:red'>Command failed!</span>");
+            return false;
+        }
+
+        $.get('/api.php?action=add_thumb&image-id=' + imageId + '&format-id=' + formatId
+                + '&path=' + encodeURIComponent(wsCmd.arguments.output)
+                + '&digest=' + '{{ api.digest.add_thumb }}',
+                function (d) {
+                    if (d.error) {
+                        $(node).parent().append("<br><span style='color:red'>" + d.message + "</span>");
+                        return false;
+                    }
+
+                    var src = wsCmd.arguments.output
+                        .replace(/^.*\/([^\/]+\.[a-z]{3,4})$/, '/uploads/$1');
+                    $(node).parent().html("<img src='" + src + "'>");
+                }
+             );
+        return false;
+    });
+}
+
+function patch(node, imageId, albumId) {
+}
+</script>
 {% for e in album.images %}
 <table class="image-list-element">
     <tr>
-        <td class="thumbnail-container" style="width:{{ thumbnail_formats[album.format_id].width }}px">
+        <td class="thumbnail-container" style="width:{{ thumbnail_formats[album.format_id].width }}px; text-align: center">
+            {% if e.thumbnail %}
             <a class="image-link" href="/uploads/{{ e.filename }}" target="_blank">
-                <img src="/uploads/{{ e.thumbnail }}" title="{{ e.filename}}" alt="{{ e.filename}}"><br>
+                <img src="/uploads/{{ e.thumbnail }}" title="{{ e.filename}}" alt="{{ e.filename}}">
             </a>
+            {% else %}
+            <strong>No Photo</strong><br>
+            <a href="javascript:void(0)"
+               onclick='return makeThumbnail(this, {{ e.wscmd|raw }}, {{ e.id }}, {{ album.format_id }})'>Make thumbnail</a>
+            {% endif %}<br>
         </td>
         <td style="vertical-align:top">
             <table class="simple-list" style="width: 100%">
                 <tr>
                     <td style="width:70px">File</td>
                     <td>
-                        <a href="/gallery/image/?id={{ e.id }}" target="_blank">
+                        <a href="/gallery/image/?id={{ e.id }}">
                             <code>{{ e.filename }}</code>
                         </a>
                     </td>
@@ -62,6 +101,8 @@
                         <a href="javascript:void(0)"
                            onclick="if (confirm('This will remove the image. Are you sure?')) return imToolsWebUi.deleteObject('/gallery/image/delete.php?id={{ e.id }}', $(this).closest('.image-list-element'))"
                            class="action delete">Delete</a>
+                        | <a href="javascript:void(0)"
+                            onclick='return patch(this)'>Patch</a>
                     </td>
                 </tr>
             </table>

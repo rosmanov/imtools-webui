@@ -1,25 +1,37 @@
-{#<link href="/css/main.css" rel="stylesheet" />#}
-<link href="/css/upload.css" rel="stylesheet" />
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Uploading</title>
+    {#<link href="/css/main.css" rel="stylesheet" />#}
+    <link href="/css/upload.css" rel="stylesheet" />
+</head>
+<body>
+    {% if errors %}<div class="errors">{{ errors }}</div>{% endif %}
 
-{% if errors %}<div class="errors">{{ errors }}</div>{% endif %}
+    <form id="upload"
+          action="{{ page.url }}{% if server.QUERY_STRING %}?{{ server.QUERY_STRING }}{% endif %}"
+          method="post" enctype="multipart/form-data">
+        <input type="hidden" name="album_id" id="album_id" value="{{ post.album_id|default(get.album_id|default(0)) }}" />
+        <div id="drop">
+            Drop Here<br>
 
-<form id="upload"
-      action="{{ page.url }}{% if server.QUERY_STRING %}?{{ server.QUERY_STRING }}{% endif %}"
-      method="post" enctype="multipart/form-data">
-    <input type="hidden" name="album_id" id="album_id" value="{{ post.album_id|default(get.album_id|default(0)) }}" />
-    <div id="drop">
-        Drop Here<br>
+            <a>Browse</a>
+            <input type="file" name="file" multiple />
+            <div class="upload-options">
+                <input type="checkbox" name="make_thumbnails" value="1" checked/> Make thumbnails
+            </div>
+        </div>
+        <ul>
+            <!-- The file uploads will be shown here -->
+        </ul>
+    </form>
 
-        <a>Browse</a>
-        <input type="file" name="file" multiple />
-    </div>
-    <ul>
-        <!-- The file uploads will be shown here -->
-    </ul>
-</form>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.ui.widget.js"></script>
+    <script src="/js/jquery.iframe-transport.js"></script>
+    <script src="/js/jquery.fileupload.js"></script>
+    <script src="/js/upload.js"></script>
+</body>
+</html>
 
-<script src="/js/jquery.min.js"></script>
-<script src="/js/jquery.ui.widget.js"></script>
-<script src="/js/jquery.iframe-transport.js"></script>
-<script src="/js/jquery.fileupload.js"></script>
-<script src="/js/upload.js"></script>
+

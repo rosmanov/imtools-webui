@@ -21,8 +21,13 @@ class Response
         exit(json_encode($array));
     }
 
-    public static function jsonSuccess()
+    public static function jsonSuccess($message = null)
     {
-        static::json(['error' => false, 'success' => true]);
+        static::json(['error' => false, 'success' => true, 'message' => $message]);
+    }
+
+    public static function jsonError($message = null)
+    {
+        static::json(['error' => true, 'success' => false, 'message' => $message]);
     }
 }

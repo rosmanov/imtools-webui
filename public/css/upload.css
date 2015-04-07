@@ -84,8 +84,13 @@ section, footer, header, aside{
     background-color:#0986a3;
 }
 
-#drop input{
+#drop input[type=file] {
     display:none;
+}
+
+#drop .upload-options {
+    margin: 10px 0;
+    font-size: 0.84em;
 }
 
 #upload ul{
