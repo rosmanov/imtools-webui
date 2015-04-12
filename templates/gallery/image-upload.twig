@@ -1,0 +1,40 @@
+{% if not form_id %}{% set form_id = 'upload' %}{% endif %}
+{% if not drop_zone_id %}{% set drop_zone_id = 'drop' %}{% endif %}
+{% if not form_action %}{% set form_action = page.url %}{% endif %}
+{% if not album_id %}{% set album_id = post.album_id|default(get.album_id|default(get.id)) %}{% endif %}
+
+<link rel="stylesheet" href="/css/upload-form.css" type="text/css" media="all" />
+
+<form id="{{ form_id }}" class="upload-form" action="{{ form_action }}"
+      method="post" enctype="multipart/form-data">
+    <input type="hidden" name="album_id" value="{{ album_id }}" />
+    {% for hf in hidden_fields %}
+    <input type="hidden" name="{{ hf.name }}" value="{{ hf.value }}" />
+    {% endfor %}
+    <div class="upload-options">
+        <ol>
+            <li>{{ it_checkbox({'name':'make_thumbnails', 'checked':1, 'desc':'Generate thumbnails'}) }}</li>
+            {% for cb in checkboxes %}<li>{{ it_checkbox(cb) }}</li>{% endfor %}
+            {% for tf in text_fields %}<li>{{ it_text_field(tf) }}</li>{% endfor %}
+        </ol>
+    </div>
+    <div id="{{ drop_zone_id }}" class="drop-zone">
+        Drop Here<br>
+        <a class="browse-button">Browse</a>
+        <input type="file" name="file" multiple />
+    </div>
+    <ul>
+        <!-- The file uploads will be shown here -->
+    </ul>
+</form>
+
+<script>
+$('.checkbox-wrapper').click(function() {
+    $(this).find('input[type=checkbox]').click();
+    return true;
+});
+$('.text-field-wrapper').click(function() {
+    $(this).find('input').select();
+    return true;
+});
+</script>

@@ -4,7 +4,6 @@ use ImTools\WebUI\Gallery;
 use ImTools\WebUI\Request;
 use ImTools\WebUI\Page;
 use ImTools\WebUI\Conf;
-use ImTools\WebUI\Api;
 
 require_once __DIR__ . '/../../../src/bootstrap.php';
 
@@ -20,6 +19,5 @@ if ($template_vars['album'] = Gallery::getAlbum($id)) {
     $template_vars['album']['images'] = Gallery::getImages($id, true);
 }
 $template_vars['thumbnail_formats'] = Conf::get('thumbs');
-$template_vars['api']['digest'] = Api::getAllDigests();
 
 Template::display('gallery/album-view.twig', $template_vars);

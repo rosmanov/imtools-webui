@@ -9,3 +9,4 @@ vendor
 uploads
 !*.keep
 tags
+tmp

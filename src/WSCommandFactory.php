@@ -5,7 +5,8 @@ abstract class WSCommandFactory {
     const
         CMD_META    = 'Meta',
         CMD_RESIZE  = 'Resize',
-        CMD_MERGE   = 'Merge';
+        CMD_MERGE   = 'Merge',
+        CMD_DIFF    = 'Diff';
 
     abstract function __construct();
 
@@ -13,6 +14,8 @@ abstract class WSCommandFactory {
         switch ($type) {
             case self::CMD_META: // passthrough
             case self::CMD_RESIZE:
+            case self::CMD_MERGE:
+            case self::CMD_DIFF:
                 $class = __NAMESPACE__ . '\\WSCommand\\' . $type;
                 break;
             default:

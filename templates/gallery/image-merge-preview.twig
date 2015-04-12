@@ -1,0 +1,45 @@
+{# Input:
+- images - Array of original images
+- preview_dir - Operation directory relative to 'tmp_dir'
+#}<h3>Merging</h3>
+<form id="merge-preview-form">
+    <ul class="merge-preview-items" id="merge-preview-items">
+        {% for image in images %}
+        <li>
+            <code>{{ it_checkbox({'name':'ids[]', 'checked':1, 'desc': image.filename}) }}</code>
+            <a href="/uploads/{{ image.filename }}">Old</a>
+            |
+            <a href="{{ image.preview_url }}">New</a>
+            |
+            <a href="{{ image.diff_url }}" class="action"
+                onclick='imToolsWebUi.diff({{ image.ws_diff_command|raw }}, "{{ image.diff_url }}")'>View Diff</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <div>
+        <a href="javascript:void(0)" class="action"
+            onclick="$('#merge-preview-form').submit(); return false">Merge Selected</a>
+        |
+        <a href="javascript:void(0)" class="action delete"
+            onclick="$('#merge-preview-form').fadeOut(1e3).replace('Cancelled'); return false">Cancel</a>
+    </div>
+</form>
+<style>
+.merge-preview-items {
+    list-style-type:none;
+    padding: 0;
+}
+.merge-preview-items > li {
+    margin: 8px 0;
+}
+.merge-preview-items > li > a {
+    font-size: 0.9em;
+}
+</style>
+<script>
+$('#merge-preview-items').magnificPopup({
+    delegate: 'a',
+    type: 'image'
+});
+</script>
+{# vim: set ft=html.twig: #}

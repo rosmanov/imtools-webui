@@ -1,0 +1,35 @@
+{#
+Input:
+- image (with thumbnail property)
+#}
+<table class="simple-list">
+    <tr>
+        <td colspan=2 style="text-align:center">
+            {% if image.thumbnail %}
+            <img src="/uploads/{{ image.thumbnail }}"
+                 alt="/uploads/{{ image.filename }}"
+                 onclick='$.magnificPopup.open({type:"image", items:{src: this.alt}}); return false'>
+            {% else %}
+            No Thumbnail<br>
+            (<a class="action" href="javascript:void(0)"
+               onclick='return imToolsWebUi.makeThumbnail(this, {{ image.wscmd|raw }}, {{ image.id }}, 2)'>Generate</a>)
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>File</td>
+        <td>
+            <a href="/gallery/image/?id={{ image.id }}">
+                <code>{{ image.filename }}</code>
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td>Modified</td>
+        <td>{{ image.modified }}</td>
+    </tr>
+    <tr>
+        <td>Created</td>
+        <td>{{ image.created }}</td>
+    </tr>
+</table>

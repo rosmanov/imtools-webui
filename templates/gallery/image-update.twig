@@ -1,0 +1,70 @@
+{#
+Input:
+- image
+- thumbnail
+- page
+#}{% include 'header.twig' %}
+{% include 'gallery/menu.twig' %}
+
+{% if not _gallery_image_update_included %}
+{% set _gallery_image_update_included = 1 %}
+<script src="/js/jquery.ui.widget.js"></script>
+<script src="/js/jquery.iframe-transport.js"></script>
+<script src="/js/jquery.fileupload.js"></script>
+<script src="/js/upload.js"></script>
+{% endif %}
+
+<div>
+    <a href="{% if get.album_id %}/gallery/album/?id={{ get.album_id }}{% else %}{{ page.url }}{% endif %}">&laquo;Back</a>
+</div>
+
+<h3>Properties</h3>
+<div id="image-update-info">{% include 'gallery/image-update-info.twig' %}</div>
+
+<h3>Upload</h3>
+{% include 'gallery/image-upload.twig'
+with {
+    'hidden_fields' : [
+        {'name': 'id', 'value': image.id|default(post.image_id)}
+    ],
+    'checkboxes' : [
+        {'name': 'as_album_patch', 'desc': 'Merge the difference with the rest of album images', 'id': 'as_album_patch'}
+    ],
+    'text_fields': [
+        {'name': 'as_album_patch_strict', 'desc': 'Merge mode strictness', 'hidden': 1, 'id': 'as_album_patch_strict', 'size': 1, 'maxlength': 1, 'value': 0, 'class': 'numeric'}
+    ],
+    'form_action' : '/gallery/image/update.php'
+    }
+%}
+<div id="merge-container">{# will be filled with preview stuff #}</div>
+
+<script>
+$('#as_album_patch input[type=checkbox]').click(function() {
+    $('#as_album_patch_strict').toggle();
+    return true;
+});
+itUploader.init({
+    done: function (e, data) {
+        var r = data.result;
+        if (r.error) return;
+        if (typeof r.response.image != 'undefined') {
+            // response is image data
+            var url = '/api.php?action=get_image_update_info&image-id='
+                + Number(r.response.image.id);
+            $.get(url, function (d) {
+                $('#image-update-info').html(d.response);
+            });
+        } else if (typeof r.response.ws_preview_command != 'undefined'
+                && typeof r.response.ws_real_merge_command != 'undefined'
+                && typeof r.response.image_id != 'undefined'
+                && typeof r.response.preview_dir != 'undefined')
+        {
+            imToolsWebUi.mergePreview(r.response, '#merge-container');
+        } else {
+            console.log("invalid response", r);
+        }
+    }
+});
+</script>
+
+{% include 'footer.twig' %}

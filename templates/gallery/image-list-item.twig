@@ -1,0 +1,52 @@
+{#
+Input:
+- image
+- album
+- thumbnail_formats
+#}
+<table class="image-list-element">
+    <tr>
+        <td class="thumbnail-container" style="width:{{ thumbnail_formats[album.format_id].width }}px; text-align: center">
+            {% if image.thumbnail %}
+            <a class="image-link" href="/uploads/{{ image.filename }}"
+              onclick='$.magnificPopup.open({type:"image", items:{src: this.href}}); return false'>
+                <img src="/uploads/{{ image.thumbnail }}" title="{{ image.filename}}" alt="{{ image.filename}}">
+            </a>
+            {% else %}
+            <strong>No Photo</strong><br>
+            <a href="javascript:void(0)"
+               onclick='return imToolsWebUi.makeThumbnail(this, {{ image.wscmd|raw }}, {{ image.id }}, {{ album.format_id }})'>Generate</a>
+            {% endif %}<br>
+        </td>
+        <td style="vertical-align:top">
+            <table class="simple-list" style="width: 100%">
+                <tr>
+                    <td style="width:70px">File</td>
+                    <td>
+                        <a href="/gallery/image/?id={{ image.id }}">
+                            <code>{{ image.filename }}</code>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Modified</td>
+                    <td>{{ image.modified }}</td>
+                </tr>
+                <tr>
+                    <td>Created</td>
+                    <td>{{ image.created }}</td>
+                </tr>
+                <tr>
+                    <td>Actions</td>
+                    <td>
+                        <a href="javascript:void(0)"
+                           onclick="if (confirm('This will remove the image. Are you sure?')) return imToolsWebUi.deleteObject('/gallery/image/delete.php?id={{ image.id }}', $(this).closest('.image-list-element'))"
+                           class="action delete">Delete</a>
+                        | <a href="/gallery/image/update.php?album_id={{ album.id }}&id={{ image.id }}"
+                             class="action update">Update</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

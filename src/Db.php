@@ -77,7 +77,22 @@ class Db
         if (! ($result = static::query($query))) {
             return false;
         }
-        return $result->fetch_all(\MYSQLI_ASSOC);
+        $a = $result->fetch_all(\MYSQLI_ASSOC);
+        $result->close();
+        return $a;
+    }
+
+    public static function fetchHash($query) {
+        if (! ($result = static::query($query))) {
+            return false;
+        }
+
+        $a = [];
+        while ($row = $result->fetch_row()) {
+            $a[$row[0]] = $row[1];
+        }
+        $result->close();
+        return $a;
     }
 
     public static function f1($query)

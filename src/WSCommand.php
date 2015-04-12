@@ -13,6 +13,11 @@ abstract class WSCommand {
     abstract public function __construct(array $arguments);
     abstract public function generateDigest();
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
     protected function getConfig()
     {
         static $config;

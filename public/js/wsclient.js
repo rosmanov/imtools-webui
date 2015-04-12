@@ -17,6 +17,9 @@ wsClient = function(host, port, onOpen, outputNode) {
             self._defaultOnOpen.call(self, evt);
         }
     };
+    self.websocket.onerror = function (evt) {
+        self._defaultOnError.call(self, evt);
+    };
 };
 
 wsClient.prototype._defaultOnOpen = function (evt) {
@@ -28,13 +31,14 @@ wsClient.prototype._defaultOnOpen = function (evt) {
 };
 
 wsClient.prototype._defaultOnError = function (evt) {
-    var msg;
+    var msg,
+    ws = this instanceof WebSocket ? this : this.websocket;
 
     if (evt.data)
         msg = evt.data;
-    else if (this.websocket.readyState == 0)
+    else if (ws.readyState == 0)
         msg = "Failed to open connection"
-    else if (this.websocket.readyState == 3)
+    else if (ws.readyState == 3)
         msg = "Connection closed"
     else
         msg = 'unknown';
@@ -48,6 +52,16 @@ wsClient.prototype._defaultOnMessage = function (evt) {
     this.log("<p style='color: rgb(151, 213, 151);'>&gt; RESPONSE: " + evt.data + "</p>");
 };
 
+
+/**
+ * @brief Sends message to the WebSocket server
+ *
+ * @param Variant message Server command in JSON (whether `Object`, or `String`)
+ * @param Function onMessage
+ * @param Function onError
+ *
+ * @return Boolean
+ */
 wsClient.prototype.sendMessage = function (message, onMessage, onError) {
     var self = this;
 
@@ -85,6 +99,6 @@ wsClient.prototype.log = function (message) {
     n.html(this.jqOutputNode.html() + message);
     var h = n[0].scrollHeight;
     n.animate({scrollTop:h}, {
-        duration: 500
+        duration: 100
     });
 }

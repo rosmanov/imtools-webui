@@ -66,14 +66,20 @@ class Gallery
         return $filename;
     }
 
-    public static function addImage($no_thumbnails = false)
+
+    public static function addImage()
     {
-        if (! ($album_id = Request::getIntFromPost('album_id', 0))) {
+        if (! ($album_id = Request::getInt('album_id', 0))) {
             throw new \BadMethodCallException('Invalid album ID passed');
         }
 
+        // 'image_id' > 0 means update. Otherwise we're uploading new image
+        $image_id = Request::getInt('id', 0);
+
         $target_dir = Conf::get('fs', 'upload_dir');
-        $target_file = $target_dir . '/' . mb_strtolower(basename($_FILES["file"]["name"]), 'UTF-8');
+        $target_basename = preg_replace('/(?:\-\-)+/', '-', preg_replace('/[^A-Za-z0-9\-\_\^\$\.\|]/', '-',
+            mb_strtolower(basename($_FILES["file"]["name"]), 'UTF-8')));
+        $target_file = $target_dir . '/' . $target_basename;
         $extension = pathinfo($target_file, PATHINFO_EXTENSION);
 
         $image_size = getimagesize($_FILES["file"]["tmp_name"]);
@@ -105,16 +111,25 @@ class Gallery
             'height'        => $image_size[1],
             'created'       => null,
         ];
-        $image['id'] = Db::insert(self::IMAGES_TABLE, $image);
+        if ($image_id) {
+            self::deleteImage($image_id);
+            $image['id'] = $image_id;
+        }
+        if (! ($image['id'] = Db::insert(self::IMAGES_TABLE, $image))) {
+            Db::rollback();
+            throw \RuntimeException("Failed to insert image");
+        }
 
-        if ($no_thumbnails) {
+        if (!isset($_POST['make_thumbnails'])) {
             return $image;
         }
 
         try {
             static::makeThumbnails($image['id']);
         } catch (\Exception $e) {
-            static::deleteImage($image['id']);
+            if (!$image_id) {
+                static::deleteImage($image['id']);
+            }
             throw $e;
         }
 
@@ -186,7 +201,7 @@ class Gallery
         return $options;
     }
 
-    protected static function makeThumbnails($image_id)
+    public static function makeThumbnails($image_id, $format_id = null)
     {
         if (! ($image = static::getImage($image_id))) {
             throw new \RuntimeException("Image #$image_id not found");
@@ -202,28 +217,14 @@ class Gallery
             throw new \RuntimeException("image '$image_path' doesn't exist");
         }
 
-        foreach (Conf::get('thumbs') as $format_id => $format) {
+        if ($format_id) {
+            $formats = [$format_id => Conf::get('thumbs', $format_id)];
+        } else {
+            $formats = Conf::get('thumbs');
+        }
+
+        foreach ($formats as $format_id => $format) {
             $options = static::createResizeCommandOptions($image, $album, $format);
-            /*
-            $options = [
-                'source'        => $image_path,
-                'output'        => static::getThumbnailPath($image_id, $format_id),
-                'interpolation' => $album['interpolation'],
-            ];
-
-            $fx = $format['width'] / $image['width'];
-            $fy = $format['height'] / $image['height'];
-            if ($fx != $fy) {
-                $options['fx'] = $fx;
-                //$options['fy'] = $fy;
-                // Make proportional height
-                $options['fy'] = $fx;
-            } else { // non-proportional format
-                $options['width']  = $format['width'];
-                $options['height'] = $format['height'];
-            }
-            */
-
             $commands[$format_id] = CommandFactory::create(CommandFactory::CMD_RESIZE, $options);
         }
 
@@ -258,6 +259,7 @@ class Gallery
 
         return Db::commit();
     }
+
 
     public static function addThumbnail($path, $image_id, $format_id)
     {
@@ -297,18 +299,37 @@ class Gallery
         return Db::fetch('SELECT * FROM ' . static::ALBUMS_TABLE . " WHERE id = $album_id");
     }
 
+    private static function _getImagesQuery(array $data)
+    {
+        $q_where = '';
+        if (isset($data['album_id'])) {
+            $q_where []= 'i.album_id = ' . (int) $data['album_id'];
+        }
+        if (isset($data['image_ids'])) {
+            $q_where []= 'i.id IN(' . implode(',', array_map('intval', $data['image_ids'])) . ')';
+        }
+
+        return 'SELECT i.*, t.filename AS thumbnail
+            FROM ' . static::IMAGES_TABLE . ' i
+            JOIN ' . static::ALBUMS_TABLE . ' a ON a.id = i.album_id
+            LEFT JOIN ' . static::THUMBS_TABLE . ' t ON t.image_id = i.id AND t.format_id = a.format_id
+            WHERE ' . implode(' AND ', $q_where) . ' ORDER BY i.created, i.id';
+    }
+
+    public static function getImagesByIds(array $ids)
+    {
+        return Db::fetchAll(self::_getImagesQuery(['image_ids' => $ids]));
+    }
+
     public static function getImages($album_id, $wscommand_info = false)
     {
         $album_id = (int) $album_id;
 
-        $images = Db::fetchAll('SELECT i.*, t.filename AS thumbnail
-            FROM ' . static::IMAGES_TABLE . " i
-            JOIN " . static::ALBUMS_TABLE . " a ON a.id = i.album_id
-            LEFT JOIN " . static::THUMBS_TABLE . " t ON t.image_id = i.id AND t.format_id = a.format_id
-            WHERE i.album_id = $album_id
-            ORDER BY i.created, i.id");
+        $images = Db::fetchAll(self::_getImagesQuery(['album_id' => $album_id]));
 
-        if (!$wscommand_info) return $images;
+        if (!$wscommand_info) {
+            return $images;
+        }
 
         if (! ($album = static::getAlbum($album_id))) {
             throw new \RuntimeException("Failed to fetch album #$album_id");
@@ -355,11 +376,46 @@ class Gallery
             . " WHERE image_id = $image_id AND format_id = $format_id");
     }
 
-    public static function getImage($id)
+    public static function getImage($id, $thumbnail = null, $wscommand_info = false)
     {
         $id = (int) $id;
 
-        return Db::fetch("SELECT * FROM " . static::IMAGES_TABLE . " WHERE id = $id");
+        if (!$thumbnail) {
+            return Db::fetch("SELECT * FROM " . static::IMAGES_TABLE . " WHERE id = $id");
+        }
+
+        if (is_numeric($thumbnail)) {
+            $thumbnail = (int) $thumbnail;
+            $q_join = " LEFT JOIN " . static::THUMBS_TABLE . " t ON t.image_id = i.id AND t.format_id = $thumbnail";
+        } else {
+            $q_join = " JOIN " . static::ALBUMS_TABLE . " a ON a.id = i.album_id
+                LEFT JOIN " . static::THUMBS_TABLE . " t ON t.image_id = i.id AND t.format_id = a.format_id ";
+        }
+
+        $image = Db::fetch("SELECT i.*, t.filename AS thumbnail
+            FROM " . static::IMAGES_TABLE . " i $q_join WHERE i.id = $id");
+
+        if (!$image['thumbnail'] && $wscommand_info) {
+            $album = self::getAlbum($image['album_id']);
+            $format = Conf::get('thumbs', (is_int($thumbnail) ? $thumbnail : $album['format_id']));
+            $arguments = self::createResizeCommandOptions($image, $album, $format);
+            $ws_command = WSCommandFactory::create(WSCommandFactory::CMD_RESIZE, $arguments);
+            $image['wscmd'] = json_encode([
+                'command'   => 'resize',
+                'arguments' => $arguments,
+                'digest'    => $ws_command->generateDigest(),
+            ]);
+        }
+
+        return $image;
+    }
+
+    public static function getImageFilenamesHash($album_id)
+    {
+        $album_id = (int) $album_id;
+
+        return Db::fetchHash("SELECT id, filename FROM " . static::IMAGES_TABLE
+            . " WHERE album_id = $album_id");
     }
 
     public static function getMenu($menu_type) {

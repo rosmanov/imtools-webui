@@ -14,6 +14,24 @@ p {
     font-size: 0.96em;
 }
 
+h1 {
+    font-variant: small-caps;
+}
+h3 {
+    font-size: 1.6em;
+    font-family: fantasy;
+    font-weight: 400;
+}
+
+h3:before {
+    font-size: 1.6em;
+    content: '▪ ';
+    color: orange;
+    font-family: fantasy;
+    line-height: 1;
+    font-weight: 400;
+}
+
 table th {
     font-weight: bold;
     background: #555555 !important;
@@ -60,18 +78,19 @@ form #submit {
 .wrapper {
     min-height: 100%;
     position: relative;
-    margin: 0 30px;
+    margin: 1% 30px;
+    background: white;
 }
 
 .header {
     border-width: 0 0 1px 0;
-    border-color: #333333;
+    border-color: #cfcfcf;
     border-style: solid;
     padding: 10px;
-    /*background: #5ee;*/
 }
 
 .content {
+    background: none;
     padding: 10px;
     padding-bottom: 80px; /* height of the footer */
 }
@@ -86,13 +105,18 @@ form #submit {
     font-size: 0.86em;
 
     border-width: 1px 0 0 0;
-    border-color: #333333;
+    border-color: #cfcfcf;
     border-style: solid;
+    background-image: linear-gradient(#f1f1f1 50%, #fafafa 50%);
 }
 
-.header .title {
+.header {
+    background-image: linear-gradient(#f1f1f1 50%, #fafafa 50%);
+}
+.header .logo{
     font-size: 2em;
-    width: 400px;
+    /*width: 400px;*/
+    line-height: 1;
 }
 
 .header .title a, .header .title a:hover, .header .title a:visited {
@@ -100,25 +124,42 @@ form #submit {
     text-decoration:none;
 }
 
+.top-menu {
+    text-align: right;
+}
+
+.top-menu a, .top-menu a:hover {
+    font-size: 14px !important;
+}
+
+.top-menu a.current:hover,  .footer a.current:hover {
+    border: 0px none;
+}
+
+.top-menu a:hover, .footer a:hover {
+    border-bottom: 0.2em solid black;
+}
+
 .navigation a:hover, .navigation a {
     font-size: 0.9em;
     font-weight: bold;
-    color: #0050A0;
-    padding: 0.7em 1.1em;
+    color: #333;
+    padding: 0.5em 1em;
 }
 
 .navigation a {
     text-decoration: none;
 }
 
-.navigation a:hover, .navigation .current {
-    background: #3755A0;
-    color: #f4f4f4;
+.navigation .current {
+    color: white !important;
+    background-image: linear-gradient(#363636 50%, #525252 50%);
 }
 
 .gallery-menu {
     font-size: 0.86em;
     height: 40px;
+    background: none;
 }
 
 .required-field {
@@ -153,7 +194,6 @@ form #submit {
 }
 .thumbnail-container {
     padding: 3px;
-    /*background-color: #4b4b4b;*/
     border: 1px solid #ccc;
     background-color: #f0f0f0;
 
@@ -184,4 +224,58 @@ table.simple-list
 .wsclient-output * {
     font-family: 'DejaVu Sans Mono', monospace !important;
     font-size: 0.8em !important;
+}
+
+.wsclient-output *::selection {
+    color: #000;
+    background: #FFA500;
+}
+.wsclient-output *::-moz-selection {
+    color: #000;
+    background: #FFA500;
+}
+.wsclient-output *::-webkit-selection {
+    color: #000;
+    background: #FFA500;
+}
+
+.checkbox-wrapper {
+    margin-bottom: 1.1em;
+    cursor: pointer;
+    /*text-decoration: underline;*/
+}
+.checkbox-wrapper:hover {
+    text-decoration: none;
+}
+.checkbox-wrapper input {
+    margin-right: 6px;
+}
+
+.text-field-wrapper {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.text-field-wrapper input {
+    margin-right: 6px;
+}
+.text-field-wrapper.numeric input {
+    text-align: right;
+    font-weight: 600;
+    padding: 1px 3px;
+    font-family: monospace;
+    line-height: normal;
+}
+
+.action {
+    cursor: pointer;
+    border-bottom: 1px dashed #999;
+    /*display: inline;*/
+    /*line-height:1;*/
+    text-decoration: none;
+}
+
+.action:hover {
+    text-decoration: none;
+    border-bottom: 1px solid #999;
 }

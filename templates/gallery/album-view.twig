@@ -1,5 +1,9 @@
 {% include 'header.twig' %}
 {% include 'gallery/menu.twig' %}
+<script src="/js/jquery.ui.widget.js"></script>
+<script src="/js/jquery.iframe-transport.js"></script>
+<script src="/js/jquery.fileupload.js"></script>
+<script src="/js/upload.js"></script>
 
 <div>
     <a href="{{ page.url }}">&laquo;Back</a>
@@ -29,110 +33,31 @@
     </tr>
 </table>
 
-<h3>Images</h3>
+<h3>Upload</h3>
+{% include 'gallery/image-upload.twig' with {'form_action' : '/gallery/image/add.php'}  %}
 <script>
-function makeThumbnail(node, wsCmd, imageId, formatId) {
-    wc.sendMessage(wsCmd, function(evt) {
-        wc._defaultOnMessage.call(wc, evt);
+itUploader.init({
+    done: function (e, data) {
+        var r = data.result,
+        url = '/api.php?action=get_image_list_item&image-id=' + Number(r.response.id);
 
-        var data = JSON.parse(evt.data);
-        if (!data) return false;
-        if (data.error != false) {
-            $(node).parent().append("<br><span style='color:red'>Command failed!</span>");
-            return false;
-        }
-
-        $.get('/api.php?action=add_thumb&image-id=' + imageId + '&format-id=' + formatId
-                + '&path=' + encodeURIComponent(wsCmd.arguments.output)
-                + '&digest=' + '{{ api.digest.add_thumb }}',
-                function (d) {
-                    if (d.error) {
-                        $(node).parent().append("<br><span style='color:red'>" + d.message + "</span>");
-                        return false;
-                    }
-
-                    var src = wsCmd.arguments.output
-                        .replace(/^.*\/([^\/]+\.[a-z]{3,4})$/, '/uploads/$1');
-                    $(node).parent().html("<img src='" + src + "'>");
-                }
-             );
-        return false;
-    });
-}
-
-function patch(node, imageId, albumId) {
-}
-</script>
-{% for e in album.images %}
-<table class="image-list-element">
-    <tr>
-        <td class="thumbnail-container" style="width:{{ thumbnail_formats[album.format_id].width }}px; text-align: center">
-            {% if e.thumbnail %}
-            <a class="image-link" href="/uploads/{{ e.filename }}" target="_blank">
-                <img src="/uploads/{{ e.thumbnail }}" title="{{ e.filename}}" alt="{{ e.filename}}">
-            </a>
-            {% else %}
-            <strong>No Photo</strong><br>
-            <a href="javascript:void(0)"
-               onclick='return makeThumbnail(this, {{ e.wscmd|raw }}, {{ e.id }}, {{ album.format_id }})'>Make thumbnail</a>
-            {% endif %}<br>
-        </td>
-        <td style="vertical-align:top">
-            <table class="simple-list" style="width: 100%">
-                <tr>
-                    <td style="width:70px">File</td>
-                    <td>
-                        <a href="/gallery/image/?id={{ e.id }}">
-                            <code>{{ e.filename }}</code>
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Modified</td>
-                    <td>{{ e.modified }}</td>
-                </tr>
-                <tr>
-                    <td>Created</td>
-                    <td>{{ e.created }}</td>
-                </tr>
-                <tr>
-                    <td>Actions</td>
-                    <td>
-                        <a href="javascript:void(0)"
-                           onclick="if (confirm('This will remove the image. Are you sure?')) return imToolsWebUi.deleteObject('/gallery/image/delete.php?id={{ e.id }}', $(this).closest('.image-list-element'))"
-                           class="action delete">Delete</a>
-                        | <a href="javascript:void(0)"
-                            onclick='return patch(this)'>Patch</a>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
-{% else %}
-<p>Album is empty</p>
-{% endfor %}
-<div style="clear: both"></div>
-
-<script type="text/javascript" charset="utf-8">
-$('.image-link').magnificPopup({
-    type: 'image',
-    mainClass: 'mfp-with-zoom', // this class is for CSS animation below
-
-    zoom: {
-        enabled: true, // By default it's false, so don't forget to enable it
-        duration: 300, // duration of the effect, in milliseconds
-        easing: 'ease-in-out', // CSS transition easing function
-            // The "opener" function should return the element from which popup will be zoomed in
-            // and to which popup will be scaled down
-            // By defailt it looks for an image tag:
-        opener: function(openerElement) {
-            // openerElement is the element on which popup was initialized, in this case its <a> tag
-            // you don't need to add "opener" option if this code matches your needs, it's defailt one.
-            return openerElement.is('img') ? openerElement : openerElement.find('img');
+        if (r.error || typeof r.response.id != 'undefined') {
+            $.get(url, function (d) {
+                $('#images_container').append(d.response);
+            });
         }
     }
 });
 </script>
+
+<h3>Images</h3>
+<div id="images_container">
+{% for image in album.images %}
+{% include 'gallery/image-list-item.twig' %}
+{% else %}
+<p>Album is empty</p>
+{% endfor %}
+</div>
+<div style="clear: both"></div>
 
 {% include 'footer.twig' %}

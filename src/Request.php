@@ -13,6 +13,11 @@ class Request
         return self::_getInt($_POST, $key, $default_value, $min, $max);
     }
 
+    public static function getInt($key, $default_value = 0, $min = null, $max = null)
+    {
+        return self::_getInt($_REQUEST, $key, $default_value, $min, $max);
+    }
+
     private static function _getInt($source, $key, $default_value = 0, $min = null, $max = null) {
         $n = isset($source[$key]) ? (int) $source[$key] : $default_value;
         return (($min !== null && $n < $min) || ($max !== null && $n > $max)) ? $default_value : $n;

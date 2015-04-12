@@ -37,3 +37,7 @@ return [
 ## Web server (Nginx) configuration
 
 See <conf/examples/nginx/imtools-webui.conf>
+
+## Database schema
+
+See <dbschema.sql>

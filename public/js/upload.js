@@ -1,94 +1,81 @@
-$(function(){
+var itUploader = {
+    settings: {
+        dropZone: '#drop',
+        _uploadContainer: '#upload',
+        done: function(e, data) {},
+        fail: function(e, data) { data.context.addClass('error'); }
+    },
 
-    var ul = $('#upload ul');
+    init: function(s) {
+        var self = this;
 
-    $('#drop a').click(function(){
-        // Simulate a click on the file input button
-        // to show the file browser dialog
-        $(this).parent().find('input').click();
-    });
+        if (s.hasOwnProperty('dropZone')) self.settings.dropZone = s.dropZone;
+        if (s.hasOwnProperty('uploadContainer')) self.settings._uploadContainer = s.uploadContainer;
+        if (s.hasOwnProperty('done')) self.settings.done = s.done;
+        if (s.hasOwnProperty('fail')) self.settings.fail = s.fail;
 
-    // Initialize the jQuery File Upload plugin
-    $('#upload').fileupload({
+        var ul = $(self.settings._uploadContainer + ' ul');
 
-        // This element will accept file drag/drop uploading
-        dropZone: $('#drop'),
+        $(self.settings.dropZone + ' a').click(function() {
+            $(this).parent().find('input').click();
+        });
 
-        // This function is called when a file is added to the queue;
-        // either via the browse button, or via drag/drop:
-        add: function (e, data) {
-            var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
-                ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
+        $(self.settings._uploadContainer).fileupload({
+            dropZone: $(self.settings.dropZone),
+            add: function (e, data) {
+                var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
+                            ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
+                tpl.find('p').text(data.files[0].name)
+                .append('<i>' + self.formatFileSize(data.files[0].size) + '</i>');
+                data.context = tpl.appendTo(ul);
 
-            // Append the file name and file size
-            tpl.find('p').text(data.files[0].name)
-                         .append('<i>' + formatFileSize(data.files[0].size) + '</i>');
-
-            // Add the HTML to the UL element
-            data.context = tpl.appendTo(ul);
-
-            // Listen for clicks on the cancel icon
-            tpl.find('span').click(function(){
-
-                if(tpl.hasClass('working')){
-                    jqXHR.abort();
-                }
-
-                tpl.fadeOut(function(){
-                    tpl.remove();
+                tpl.find('span').click(function() {
+                    if (tpl.hasClass('working')) {
+                        jqXHR.abort();
+                    }
+                    tpl.fadeOut(function() {
+                        tpl.remove();
+                    });
                 });
 
-            });
+                // Poll whether we can remove tpl
+                var timer = setInterval(function() {
+                    if (tpl.hasClass('working')) return;
+                    tpl.fadeOut(function() {
+                        tpl.remove();
+                    });
+                    clearTimeout(timer);
+                }, 6e3);
 
-            // Automatically upload the file once it is added to the queue
-            var jqXHR = data.submit();
-        },
+                // Automatically upload the file once it is added to the queue
+                var jqXHR = data.submit();
+            },
+            progress: function(e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                data.context.find('input').val(progress).change();
+                if (progress == 100) {
+                    data.context.removeClass('working');
+                }
+            },
+            fail : self.settings.fail,
+            done: self.settings.done
+        });
 
-        progress: function(e, data){
+        $(document).on('drop dragover', function (e) {
+            e.preventDefault();
+        });
+    },
 
-            // Calculate the completion percentage of the upload
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-
-            // Update the hidden input field and trigger a change
-            // so that the jQuery knob plugin knows to update the dial
-            data.context.find('input').val(progress).change();
-
-            if(progress == 100){
-                data.context.removeClass('working');
-            }
-        },
-
-        fail:function(e, data){
-            // Something has gone wrong!
-            //console.log(e, data);
-            data.context.addClass('error');
-        },
-
-        done: function(e, data) {
-        }
-    });
-
-
-    // Prevent the default action when a file is dropped on the window
-    $(document).on('drop dragover', function (e) {
-        e.preventDefault();
-    });
-
-    // Helper function that formats the file sizes
-    function formatFileSize(bytes) {
+    formatFileSize: function(bytes) {
         if (typeof bytes !== 'number') {
             return '';
         }
-
         if (bytes >= 1000000000) {
             return (bytes / 1000000000).toFixed(2) + ' GB';
         }
-
         if (bytes >= 1000000) {
             return (bytes / 1000000).toFixed(2) + ' MB';
         }
-
         return (bytes / 1000).toFixed(2) + ' KB';
     }
-
-});
+};
