@@ -1,6 +1,6 @@
 # ImTools Web UI
 
-ImTools Web UI provides a Web interface demonstrating features of the [ImTools](https://bitbucket.org/osmanov/imtools) project.
+ImTools Web UI provides a Web interface demonstrating features of the [ImTools](https://github.com/rosmanov/imtools) project.
 
 # Configuration
 
